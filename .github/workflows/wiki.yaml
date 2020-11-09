@@ -1,0 +1,33 @@
+name: checkout wiki
+on:
+  push:
+
+
+jobs:
+  checkoutwiki:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: check files1
+        run: |
+          ls -al
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{github.repository}}.wiki
+
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Add changes"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          repository: ${{github.repository}}.wiki
+          github_token: ${{ secrets.GITHUB_TOKEN }}
