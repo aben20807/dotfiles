@@ -20,6 +20,12 @@ jobs:
         with:
           repository: ${{github.repository}}.wiki
 
+      - name: check wiki repo
+        run: |
+          ls -al
+      - name: edit wiki
+        run: |
+          echo test >> test.md
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
