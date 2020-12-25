@@ -22,7 +22,7 @@ jobs:
 
       - name: check wiki repo
         run: |
-          ls -al /github/workspace
+          ls -al
       - name: edit wiki
         run: |
           echo test >> test.md
