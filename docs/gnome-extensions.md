@@ -6,7 +6,7 @@
 + Install extension in firefox
 
 ```bash
-$ sudo apt install chrome-gnome-shell
+$ sudo apt install -y chrome-gnome-shell
 ```
 
 ## Recommendations

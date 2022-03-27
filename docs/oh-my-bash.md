@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-$ sudo apt install git
+$ sudo apt install -y git
 $ bash -c "$(wget https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh -O -)"
 ```
 
