@@ -1,5 +1,13 @@
 # TMUX
 
+## Install
+
+```bash
+$ sudo snap install tmux
+$ printf '\nexport TERM=xterm' >> ~/.bashrc
+$ # reopen terminal
+```
+
 ## My prefix key
 
 + PREFIX = `Ctrl-q`

@@ -2,12 +2,17 @@ site_name: aben20807's config
 
 nav:
   - Home: 'index.md'
+  - Utils: 'utils.md'
+  - Gnome Extension: 'gnome-extensions.md'
   - VIM: 'vim.md'
+  - oh-my-bash: 'oh-my-bash.md'
   - TMUX: 'tmux.md'
   - MkDocs: 'mkdocs.md'
   - About: 'about.md'
 
 markdown_extensions:
+  - smarty
+  - meta
   - toc:
       permalink: "#"
 
