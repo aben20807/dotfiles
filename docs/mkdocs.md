@@ -3,10 +3,8 @@
 ## Install for this repo
 
 ```bash
-$ virtualenv --python python3.6 env
-$ source env/bin/activate
-$ pip install mkdocs
-$ pip install mkdocs-material
+$ pip3 install mkdocs
+$ pip3 install mkdocs-material
 ```
 
 ## Test in local
