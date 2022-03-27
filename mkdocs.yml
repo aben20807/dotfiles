@@ -1,8 +1,16 @@
+site_name: aben20807's config
+
 nav:
   - Home: 'index.md'
+  - VIM: 'vim.md'
+  - TMUX: 'tmux.md'
+  - MkDocs: 'mkdocs.md'
   - About: 'about.md'
 
 markdown_extensions:
   - toc:
-    permalink: "#"
+      permalink: "#"
+
+theme:
+  name: material
 
