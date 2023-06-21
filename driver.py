@@ -16,8 +16,15 @@ TC = SimpleNamespace(
 )
 
 
-def section(title: str):
-    print(f"\n> {TC.BLUE}{title}{TC.RESET}")
+def section(title: str, cmd_list=None):
+    if cmd_list is None:
+        cmd_list = []
+    global CUR_SECTION
+    if CUR_SECTION >= START_SECTION:
+        print(f"\n> #{CUR_SECTION} {TC.BLUE}{title}{TC.RESET}")
+        for cmd in cmd_list:
+            exec_cmd(cmd)
+    CUR_SECTION += 1
 
 
 def exec_cmd(cmd: str, cwd="./"):
@@ -55,6 +62,13 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "-s",
+        "--section",
+        type=int,
+        default=0,
+        help="run from the given section number",
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         type=int,
@@ -86,7 +100,11 @@ def main():
     if DRY_RUN:
         print(f"{TC.YELLOW}dry run{TC.RED} mode{TC.GREEN} is{TC.BLUE} ON{TC.RESET}")
 
-    section("Install apt packages")
+    global START_SECTION
+    START_SECTION = args.section
+    global CUR_SECTION
+    CUR_SECTION = 0
+
     apt_packages = [
         "gconf-editor",
         "neovim",
@@ -96,38 +114,64 @@ def main():
         "tmux",
         "htop",
         "ninja-build",
-        "python3-pip"
+        "python3-pip",
+        "chrome-gnome-shell",
+        "net-tools",
     ]
-    exec_cmd(f"sudo apt-get update && sudo apt-get install -y {' '.join(apt_packages)}")
-
-    section("Install oh-my-bash and theme")
-    exec_cmd(
-        "curl -L https://raw.githubusercontent.com/aben20807/oh-my-ouo/master/setup.sh | bash"
+    section(
+        "apt packages",
+        [f"sudo apt-get update && sudo apt-get install -y {' '.join(apt_packages)}"],
     )
 
-    section("Install Rust and related tools")
-    exec_cmd("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y")
-    exec_cmd("source ~/.cargo/env")
-    exec_cmd("rustc --version")
-    exec_cmd("cargo install exa du-dust git-delta")
-    exec_cmd("cargo install --locked bat")
-    exec_cmd(r"""printf "\nalias ls='exa -F --group-directories-first'" >> ~/.bashrc""")
-    exec_cmd(r"""printf "\nalias ll='exa -alF'" >> ~/.bashrc""")
-    exec_cmd(r"""printf "\nalias lls='exa --sort=size -l'" >> ~/.bashrc""")
-    exec_cmd(r"""printf "\nalias cat='bat'" >> ~/.bashrc""")
-    exec_cmd(r"""printf "\nalias disk='dust'" >> ~/.bashrc""")
+    python_packages = ["cmake"]
+    section("python packages", [f"pip3 install {' '.join(python_packages)}"])
 
-    section("Tmux")
+    section(
+        "oh-my-bash and theme",
+        [
+            "curl -L https://raw.githubusercontent.com/aben20807/oh-my-ouo/master/setup.sh | bash"
+        ],
+    )
+
+    section(
+        "rust and related tools",
+        [
+            "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+            "source ~/.cargo/env",
+            "rustc --version",
+            "cargo install exa du-dust git-delta",
+            "cargo install --locked bat",
+            r"""printf "\nalias ls='exa -F --group-directories-first'" >> ~/.bashrc""",
+            r"""printf "\nalias ll='exa -alF'" >> ~/.bashrc""",
+            r"""printf "\nalias lls='exa --sort=size -l'" >> ~/.bashrc""",
+            r"""printf "\nalias cat='bat'" >> ~/.bashrc""",
+            r"""printf "\nalias disk='dust'" >> ~/.bashrc""",
+        ],
+    )
+
+    section(
+        "tmux",
+        [
+            "printf '\nexport TERM=xterm' >> ~/.bashrc && source ~/.bashrc",
+            "curl -fLo ~/.tmux.conf https://raw.githubusercontent.com/aben20807/aben20807.vim/master/.tmux.conf",
+            "mkdir ~/.tmux/plugins/ -p",
+            "git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm",
+            "bash ~/.tmux/plugins/tpm/bin/install_plugins",
+        ],
+    )
     # https://github.com/aben20807/aben20807.vim/blob/master/.tmux.conf
 
-    section("Neovim")
-
-    section("Setup GNOME GUI")
-    exec_cmd(
-        "gsettings set org.gnome.shell.extensions.dash-to-dock click-action minimize-or-overview"
+    section(
+        "neovim",
+        ["mkdir ~/.config/nvim/ -p", "vim +'silent! PlugInstall' +qall < /dev/tty"],
     )
-    exec_cmd(
-        "gsettings set org.desktop.input-sources.xkb-options custom-value ['caps:escape']"
+
+    section(
+        "setup GNOME GUI",
+        [
+            "gsettings set org.gnome.shell.extensions.dash-to-dock click-action minimize-or-overview",
+            "gsettings set org.desktop.input-sources.xkb-options custom-value ['caps:escape']",
+        ],
     )
 
     # reset terminal color for WSL in windows
