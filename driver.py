@@ -132,7 +132,7 @@ def main():
     )
 
     apt_packages = [
-        "gconf-editor",
+        "dconf-tools",
         "neovim",
         "silversearcher-ag",
         "wget",

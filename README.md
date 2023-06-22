@@ -3,6 +3,7 @@
 ## Setup
 
 ```bash
+sudo apt install curl
 curl -L https://raw.githubusercontent.com/aben20807/dotfiles/master/setup.sh | bash 
 ```
 
