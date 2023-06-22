@@ -1,5 +1,6 @@
 import time
 import sys
+import os
 import subprocess
 import argparse
 from typing import List, Union
@@ -16,6 +17,8 @@ TC = SimpleNamespace(
         "RESET": "\033[0m",
     }
 )
+
+DRIVER_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def check_network():
@@ -132,7 +135,7 @@ def main():
     )
 
     apt_packages = [
-        "dconf-tools",
+        "dconf-editor",
         "neovim",
         "silversearcher-ag",
         "wget",
@@ -154,6 +157,9 @@ def main():
         "gcc",
         "make",
         "xclip",
+        "fcitx-bin",
+        "fcitx-chewing",
+        "xutils-dev"
     ]
     section(
         "apt packages",
@@ -163,6 +169,8 @@ def main():
             )
         ],
     )
+
+    section("git config", [Cmd(f"ln -s -b {DRIVER_PATH}/dotfiles/.gitconfig ~/.gitconfig")])
 
     python_packages = [
         "setuptools",
@@ -184,22 +192,21 @@ def main():
         [
             Cmd(
                 "curl -L https://raw.githubusercontent.com/aben20807/oh-my-ouo/master/setup.sh | bash"
-            )
+            ),
+            Cmd(r"sed -i 's/^\(OSH_THEME\s*=\s*\).*$/\1\"ouo\"/' ~/.bashrc"),
         ],
     )
 
     section(
         "rust and related tools",
         [
+            Cmd("rm -rf ~/.cargo && rm -rf ~/.rustup"),
             Cmd(
                 "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
             ),
             Cmd(
-                r"""printf '\n. "$HOME/.cargo/env"' >> ~/.bashrc && source ~/.bashrc"""
+                r"""source "$HOME/.cargo/env" && rustc --version && cargo install exa du-dust git-delta && cargo install --locked bat"""
             ),
-            Cmd("rustc --version"),
-            Cmd("cargo install exa du-dust git-delta"),
-            Cmd("cargo install --locked bat"),
         ],
     )
 
@@ -223,9 +230,10 @@ def main():
     section(
         "tmux",
         [
-            Cmd("printf '\nexport TERM=xterm' >> ~/.bashrc && source ~/.bashrc"),
-            Cmd("ln -s -b ./dotfiles/.tmux.fonf" "~/.tmux.conf"),
+            Cmd("printf '\nexport TERM=xterm\n' >> ~/.bashrc && source ~/.bashrc"),
+            Cmd(f"ln -s -b {DRIVER_PATH}/dotfiles/.tmux.conf ~/.tmux.conf"),
             Cmd("mkdir ~/.tmux/plugins/ -p"),
+            Cmd("yes | rm -rf ~/.tmux/plugins/tpm"),
             Cmd("git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"),
             Cmd("bash ~/.tmux/plugins/tpm/bin/install_plugins"),
         ],
@@ -246,24 +254,23 @@ def main():
     section(
         "neovim",
         [
-            Cmd("mkdir ~/.config/ -p"),
+            Cmd("mkdir ~/.config/nvim -p"),
             Cmd(
                 """sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'"""
             ),
             Cmd("curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -"),
-            Cmd("ln -s -b ./dotfiles/.config/nvim/" "~/.config/nvim/"),
+            Cmd(f"lndir -silent {DRIVER_PATH}/dotfiles/.config/nvim ~/.config/nvim"),
             Cmd("vim +'silent! PlugInstall' +qall < /dev/tty"),
+            Cmd("yes | rm -rf ~/.pyenv"),
+            Cmd("curl https://pyenv.run | bash"),
+            Cmd("""echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc"""),
             Cmd(
-                "curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash"
-            ),
-            Cmd(
-                """echo 'export PATH="/home/'`whoami`'/.pyenv/bin:$PATH"' >> ~/.bashrc"""
+                """echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc"""
             ),
             Cmd("""echo 'eval "$(pyenv init -)"' >> ~/.bashrc"""),
-            Cmd("""echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc"""),
-            Cmd("source ~/.bashrc"),
-            Cmd("pyenv install -v 3.10.6"),
-            Cmd("pyenv virtualenv 3.10.6 neovim3"),
+            Cmd(
+                "~/.pyenv/bin/pyenv install -v 3.10.6 && ~/.pyenv/bin/pyenv virtualenv 3.10.6 neovim3"
+            ),
             Cmd("~/.pyenv/versions/neovim3/bin/python -m pip install pynvim"),
         ],
     )
@@ -275,7 +282,7 @@ def main():
                 "gsettings set org.gnome.shell.extensions.dash-to-dock click-action minimize-or-overview"
             ),
             Cmd(
-                "gsettings set org.desktop.input-sources.xkb-options custom-value ['caps:escape']"
+                '''gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"'''
             ),
             Cmd("gsettings set org.gnome.desktop.interface cursor-blink false"),
         ],
