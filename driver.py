@@ -159,7 +159,7 @@ def main():
         "xclip",
         "fcitx-bin",
         "fcitx-chewing",
-        "xutils-dev"
+        "xutils-dev",
     ]
     section(
         "apt packages",
@@ -170,7 +170,9 @@ def main():
         ],
     )
 
-    section("git config", [Cmd(f"ln -s -b {DRIVER_PATH}/dotfiles/.gitconfig ~/.gitconfig")])
+    section(
+        "git config", [Cmd(f"ln -s -b {DRIVER_PATH}/dotfiles/.gitconfig ~/.gitconfig")]
+    )
 
     python_packages = [
         "setuptools",
@@ -179,6 +181,7 @@ def main():
         "ranger",
         "colour-valgrind",
         "pygments",
+        "black",
     ]
     section(
         "python packages",
