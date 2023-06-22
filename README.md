@@ -3,8 +3,7 @@
 ## Setup
 
 ```bash
-sudo apt install curl
-curl -L https://raw.githubusercontent.com/aben20807/dotfiles/master/setup.sh | bash 
+sudo apt install curl && curl -L https://raw.githubusercontent.com/aben20807/dotfiles/master/setup.sh | bash 
 ```
 
 ## Not included
@@ -16,3 +15,8 @@ curl -L https://raw.githubusercontent.com/aben20807/dotfiles/master/setup.sh | b
 ### set input method
 
 + `im-config`
+
+### GNOME Shell extensions
+
++ TODO
+
