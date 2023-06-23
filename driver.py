@@ -291,6 +291,8 @@ def main():
         ],
     )
 
+    section("nautilus")
+
     section("Finished. Please reopen the terminal.")
 
 
