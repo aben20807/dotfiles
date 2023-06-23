@@ -81,7 +81,7 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "mode", type=str, default="install", choices=["install", "clean"]
+        "mode", type=str, choices=["install", "clean"]
     )
     parser.add_argument(
         "-s",
@@ -89,14 +89,6 @@ def get_args():
         type=int,
         default=0,
         help="run from the given section number",
-    )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        type=int,
-        default=2,
-        choices=[0, 1, 2, 3],
-        help="verbose level",
     )
     parser.add_argument(
         "-d",
