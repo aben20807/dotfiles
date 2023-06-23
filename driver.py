@@ -222,8 +222,8 @@ def install():
         "ctags",
         [
             Cmd("git clone https://github.com/universal-ctags/ctags.git"),
-            Cmd("./autogen.sh && ./configure && make", "./ctags/"),
-            Cmd("sudo make install", "./ctags/"),
+            Cmd("./autogen.sh && ./configure && make", f"{DRIVER_PATH}/ctags/"),
+            Cmd("sudo make install", f"{DRIVER_PATH}/ctags/"),
         ],
     )
 
@@ -267,7 +267,7 @@ def install():
         "nautilus",
         [
             Cmd("git clone https://github.com/chr314/nautilus-copy-path.git"),
-            Cmd("sudo make install && nautilus -q", "./nautilus-copy-path"),
+            Cmd("sudo make install && nautilus -q", f"{DRIVER_PATH}/nautilus-copy-path"),
         ],
     )
 
@@ -348,7 +348,7 @@ def clean():
     section(
         "ctags",
         [
-            Cmd("sudo make uninstall", "./ctags/"),
+            Cmd("sudo make uninstall", f"{DRIVER_PATH}/ctags/"),
         ],
     )
 
@@ -363,7 +363,7 @@ def clean():
     section(
         "nautilus",
         [
-            Cmd("sudo make uninstall && nautilus -q", "./nautilus-copy-path"),
+            Cmd("sudo make uninstall && nautilus -q", f"{DRIVER_PATH}/nautilus-copy-path"),
         ],
     )
 
