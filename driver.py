@@ -55,9 +55,10 @@ class Cmd:
             if process.returncode != 0:
                 raise RuntimeError(str(out + err, encoding="utf8"))
         except RuntimeError as e:
-            print(f" {TC.RED}failed{TC.RESET}")
+            print(f"{cwd_not_cur} {TC.RED}failed{TC.RESET}")
             print(e)
-            sys.exit(1)
+            if ABORT_WHEN_ERROR:
+                sys.exit(1)
 
         timeDelta = time.time() - timeStarted
         print(f"{cwd_not_cur} {TC.GREEN}passed{TC.RESET} ({timeDelta:.3f}s)")
@@ -98,6 +99,9 @@ def get_args():
     )
     parser.add_argument(
         "--no-color", action="store_true", help="disable the terminal color"
+    )
+    parser.add_argument(
+        "--abort", action="store_true", help="abort when error"
     )
     return parser.parse_args()
 
@@ -390,6 +394,9 @@ def main():
     START_SECTION = args.section
     global CUR_SECTION
     CUR_SECTION = 0
+
+    global ABORT_WHEN_ERROR
+    ABORT_WHEN_ERROR = args.abort
 
     if args.mode == "install":
         install()
