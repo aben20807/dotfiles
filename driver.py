@@ -325,8 +325,6 @@ def clean():
     section("git config", [Cmd(f"rm -f ~/.gitconfig")])
 
     python_packages = [
-        "setuptools",
-        "pip",
         "cmake",
         "ranger",
         "colour-valgrind",
