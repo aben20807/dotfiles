@@ -8,15 +8,15 @@ sudo apt install curl && curl -L https://raw.githubusercontent.com/aben20807/dot
 
 ## Not included
 
-### ssh for git
+### SSH for git
 
 + [107.03.02 git push 免帳號密碼 | ssh key](https://aben20807.blogspot.com/2018/03/1070302-git-push-ssh-key.html)
 
-### set input method
+### Input method
 
 + `im-config`
 
 ### GNOME Shell extensions
 
-+ TODO
-
++ [cpufreq](https://extensions.gnome.org/extension/1082/cpufreq/)
++ [Net Speed](https://extensions.gnome.org/extension/4478/net-speed/)
