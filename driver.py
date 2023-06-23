@@ -118,11 +118,10 @@ def install():
         "htop",
         "ninja-build",
         "python3-pip",
-        "chrome-gnome-shell",
+        "gnome-shell-extension-manager",
         "net-tools",
         "bmon",
         "valgrind",
-        "nodejs",
         "autoconf",
         "automake",
         "libtool",
@@ -135,6 +134,7 @@ def install():
         "fcitx-bin",
         "fcitx-chewing",
         "xutils-dev",
+        "gpg",
     ]
     section(
         "apt packages",
@@ -235,6 +235,7 @@ def install():
                 """sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'"""
             ),
             Cmd("curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -"),
+            Cmd("sudo apt-get update && sudo apt-get install -y nodejs"),
             Cmd(f"lndir -silent {DRIVER_PATH}/dotfiles/.config/nvim ~/.config/nvim"),
             Cmd("vim +'silent! PlugInstall' +qall < /dev/tty"),
             Cmd("curl https://pyenv.run | bash"),
@@ -287,6 +288,14 @@ def install():
         ],
     )
 
+    section("vscode", [
+        Cmd("wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg"),
+        Cmd("sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg"),
+        Cmd("""sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'"""),
+        Cmd("rm -f packages.microsoft.gpg"),
+        Cmd("sudo apt-get install -y apt-transport-https && sudo apt-get update && sudo apt-get install -y code"),
+    ])
+
     section("Finished. Please reopen the terminal.")
 
 
@@ -298,11 +307,13 @@ def clean():
         "tmux",
         "htop",
         "ninja-build",
-        "chrome-gnome-shell",
+        "gnome-shell-extension-manager",
         "net-tools",
         "bmon",
         "valgrind",
         "nodejs",
+        "nodejs-doc",
+        "libnode72",
         "autoconf",
         "automake",
         "libtool",
@@ -315,6 +326,8 @@ def clean():
         "fcitx-chewing",
         "xutils-dev",
         "brave-browser",
+        "apt-transport-https",
+        "code",
     ]
     section(
         "apt packages",
