@@ -274,6 +274,19 @@ def install():
     #     ],
     # )
 
+    section(
+        "brave browser",
+        [
+            Cmd(
+                "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
+            ),
+            Cmd(
+                """echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list"""
+            ),
+            Cmd("sudo apt-get update && sudo apt-get install -y brave-browser"),
+        ],
+    )
+
     section("Finished. Please reopen the terminal.")
 
 
@@ -301,6 +314,7 @@ def clean():
         "fcitx-bin",
         "fcitx-chewing",
         "xutils-dev",
+        "brave-browser",
     ]
     section(
         "apt packages",
