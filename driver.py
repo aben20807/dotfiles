@@ -283,12 +283,6 @@ def install():
 
 
 def clean():
-    ppa_packages = ["ppa:neovim-ppa/stable"]
-    section(
-        "PPA packages",
-        [Cmd(f"sudo add-apt-repository -y {' '.join(ppa_packages)}")],
-    )
-
     apt_packages = [
         "dconf-editor",
         "neovim",
@@ -320,6 +314,13 @@ def clean():
         "apt packages",
         [Cmd(f"sudo apt-get purge --autoremove -y {' '.join(apt_packages)}")],
     )
+
+    ppa_packages = ["ppa:neovim-ppa/stable"]
+    section(
+        "PPA packages",
+        [Cmd(f"sudo add-apt-repository --remove -y {' '.join(ppa_packages)}")],
+    )
+
 
     section("git config", [Cmd(f"rm -f ~/.gitconfig")])
 
