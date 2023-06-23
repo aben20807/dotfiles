@@ -81,6 +81,9 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "mode", type=str, default="install", choices=["install", "clean"]
+    )
+    parser.add_argument(
         "-s",
         "--section",
         type=int,
@@ -107,27 +110,7 @@ def get_args():
     return parser.parse_args()
 
 
-def main():
-    args = get_args()
-
-    if args.no_color:
-        for k in TC.__dict__:
-            TC.__dict__[k] = ""
-
-    if not check_network():
-        print(f"{TC.RED}Please check your network settings{TC.RESET}")
-        sys.exit(1)
-
-    global DRY_RUN
-    DRY_RUN = args.dry_run
-    if DRY_RUN:
-        print(f"{TC.YELLOW}dry run{TC.RED} mode{TC.GREEN} is{TC.BLUE} ON{TC.RESET}")
-
-    global START_SECTION
-    START_SECTION = args.section
-    global CUR_SECTION
-    CUR_SECTION = 0
-
+def install():
     ppa_packages = ["ppa:neovim-ppa/stable"]
     section(
         "PPA packages",
@@ -203,7 +186,6 @@ def main():
     section(
         "rust and related tools",
         [
-            Cmd("rm -rf ~/.cargo && rm -rf ~/.rustup"),
             Cmd(
                 "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
             ),
@@ -236,7 +218,6 @@ def main():
             Cmd("printf '\nexport TERM=xterm\n' >> ~/.bashrc && source ~/.bashrc"),
             Cmd(f"ln -s -b {DRIVER_PATH}/dotfiles/.tmux.conf ~/.tmux.conf"),
             Cmd("mkdir ~/.tmux/plugins/ -p"),
-            Cmd("yes | rm -rf ~/.tmux/plugins/tpm"),
             Cmd("git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"),
             Cmd("bash ~/.tmux/plugins/tpm/bin/install_plugins"),
         ],
@@ -264,7 +245,6 @@ def main():
             Cmd("curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -"),
             Cmd(f"lndir -silent {DRIVER_PATH}/dotfiles/.config/nvim ~/.config/nvim"),
             Cmd("vim +'silent! PlugInstall' +qall < /dev/tty"),
-            Cmd("yes | rm -rf ~/.pyenv"),
             Cmd("curl https://pyenv.run | bash"),
             Cmd("""echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc"""),
             Cmd(
@@ -291,9 +271,149 @@ def main():
         ],
     )
 
-    section("nautilus")
+    section(
+        "nautilus",
+        [
+            Cmd("git clone https://github.com/chr314/nautilus-copy-path.git"),
+            Cmd("make install && nautilus -q", "./nautilus-copy-path"),
+        ],
+    )
 
     section("Finished. Please reopen the terminal.")
+
+
+def clean():
+    ppa_packages = ["ppa:neovim-ppa/stable"]
+    section(
+        "PPA packages",
+        [Cmd(f"sudo add-apt-repository -y {' '.join(ppa_packages)}")],
+    )
+
+    apt_packages = [
+        "dconf-editor",
+        "neovim",
+        "silversearcher-ag",
+        "wget",
+        "tmux",
+        "htop",
+        "ninja-build",
+        "python3-pip",
+        "chrome-gnome-shell",
+        "net-tools",
+        "bmon",
+        "valgrind",
+        "nodejs",
+        "autoconf",
+        "automake",
+        "libtool",
+        "pkg-config",
+        "libssl-dev",
+        "libffi-dev",
+        "gcc",
+        "make",
+        "xclip",
+        "fcitx-bin",
+        "fcitx-chewing",
+        "xutils-dev",
+    ]
+    section(
+        "apt packages",
+        [Cmd(f"sudo apt-get purge --autoremove -y {' '.join(apt_packages)}")],
+    )
+
+    section("git config", [Cmd(f"rm -f ~/.gitconfig")])
+
+    python_packages = [
+        "setuptools",
+        "pip",
+        "cmake",
+        "ranger",
+        "colour-valgrind",
+        "pygments",
+        "black",
+    ]
+    section(
+        "python packages",
+        [
+            Cmd(f"python3 -m pip uninstall -y {' '.join(python_packages)}"),
+        ],
+    )
+
+    section(
+        "oh-my-bash and theme",
+        [
+            Cmd("uninstall_oh_my_bash"),
+        ],
+    )
+
+    section(
+        "rust and related tools",
+        [
+            Cmd("rm -rf ~/.cargo && rm -rf ~/.rustup"),
+        ],
+    )
+
+    section(
+        "tmux",
+        [
+            Cmd(f"rm -f ~/.tmux.conf"),
+            Cmd("yes | rm -rf ~/.tmux/"),
+        ],
+    )
+
+    section("gdb", [Cmd("rm -f ~/.gdbinit")])
+
+    # https://github.com/aben20807/blog-post-issues/issues/26
+    section(
+        "ctags",
+        [
+            Cmd("sudo make uninstall", "./ctags/"),
+        ],
+    )
+
+    section(
+        "neovim",
+        [
+            Cmd("rm -rf ~/.config/nvim"),
+            Cmd("yes | rm -rf ~/.pyenv"),
+        ],
+    )
+
+    section(
+        "nautilus",
+        [
+            Cmd("make uninstall && nautilus -q", "./nautilus-copy-path"),
+        ],
+    )
+
+    section("Finished. Please reopen the terminal.")
+
+
+def main():
+    args = get_args()
+
+    if args.no_color:
+        for k in TC.__dict__:
+            TC.__dict__[k] = ""
+
+    if not check_network():
+        print(f"{TC.RED}Please check your network settings{TC.RESET}")
+        sys.exit(1)
+
+    global DRY_RUN
+    DRY_RUN = args.dry_run
+    if DRY_RUN:
+        print(f"{TC.YELLOW}dry run{TC.RED} mode{TC.GREEN} is{TC.BLUE} ON{TC.RESET}")
+
+    global START_SECTION
+    START_SECTION = args.section
+    global CUR_SECTION
+    CUR_SECTION = 0
+
+    if args.mode == "install":
+        install()
+    elif args.mode == "clean":
+        clean()
 
 
 if __name__ == "__main__":
