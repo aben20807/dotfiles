@@ -287,11 +287,9 @@ def clean():
         "dconf-editor",
         "neovim",
         "silversearcher-ag",
-        "wget",
         "tmux",
         "htop",
         "ninja-build",
-        "python3-pip",
         "chrome-gnome-shell",
         "net-tools",
         "bmon",
@@ -304,7 +302,6 @@ def clean():
         "libssl-dev",
         "libffi-dev",
         "gcc",
-        "make",
         "xclip",
         "fcitx-bin",
         "fcitx-chewing",
@@ -335,13 +332,6 @@ def clean():
         "python packages",
         [
             Cmd(f"python3 -m pip uninstall -y {' '.join(python_packages)}"),
-        ],
-    )
-
-    section(
-        "oh-my-bash and theme",
-        [
-            Cmd("uninstall_oh_my_bash"),
         ],
     )
 
