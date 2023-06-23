@@ -20,7 +20,7 @@ sudo apt install curl && curl -L https://raw.githubusercontent.com/aben20807/dot
 
 ### COC extensions in Neovim
 
-+ They will be installed in the first time
++ They will be automatically installed on first use of vim
 
 ### SSH for git
 
@@ -30,8 +30,13 @@ sudo apt install curl && curl -L https://raw.githubusercontent.com/aben20807/dot
 
 + `im-config` choose fcitx
 + Settings > Region & Language > Manage Installed Languages
-+ Install/Remove Languages... > check Chinese (traditional) > Apply
-+ Logout
++ Install/Remove Languages... > check "Chinese (traditional)" > Apply
++ Reboot
++ Open Fcitx Configuration
+  + `+` > uncheck `Only Show Current Language` > search "Chewing" > OK
+  + Configure > Global Config > Click Show Advance Option > Appearance > Do not show input window if there is only preedit string
++ Use `ctrl-space` to switch the input method
+
 
 ### GNOME Shell extensions
 
