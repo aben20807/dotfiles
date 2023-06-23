@@ -81,9 +81,7 @@ def get_args():
         description="Setup environment",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument(
-        "mode", type=str, choices=["install", "clean"]
-    )
+    parser.add_argument("mode", type=str, choices=["install", "clean"])
     parser.add_argument(
         "-s",
         "--section",
@@ -100,9 +98,7 @@ def get_args():
     parser.add_argument(
         "--no-color", action="store_true", help="disable the terminal color"
     )
-    parser.add_argument(
-        "--abort", action="store_true", help="abort when error"
-    )
+    parser.add_argument("--abort", action="store_true", help="abort when error")
     return parser.parse_args()
 
 
@@ -267,13 +263,16 @@ def install():
         ],
     )
 
-    section(
-        "nautilus",
-        [
-            Cmd("git clone https://github.com/chr314/nautilus-copy-path.git"),
-            Cmd("sudo make install && nautilus -q || true", f"{DRIVER_PATH}/nautilus-copy-path"),
-        ],
-    )
+    # section(
+    #     "nautilus",
+    #     [
+    #         Cmd("git clone https://github.com/chr314/nautilus-copy-path.git"),
+    #         Cmd(
+    #             "sudo make install && nautilus -q || true",
+    #             f"{DRIVER_PATH}/nautilus-copy-path",
+    #         ),
+    #     ],
+    # )
 
     section("Finished. Please reopen the terminal.")
 
@@ -313,7 +312,6 @@ def clean():
         "PPA packages",
         [Cmd(f"sudo add-apt-repository --remove -y {' '.join(ppa_packages)}")],
     )
-
 
     section("git config", [Cmd(f"rm -f ~/.gitconfig")])
 
@@ -364,12 +362,15 @@ def clean():
         ],
     )
 
-    section(
-        "nautilus",
-        [
-            Cmd("sudo make uninstall && nautilus -q || true", f"{DRIVER_PATH}/nautilus-copy-path"),
-        ],
-    )
+    # section(
+    #     "nautilus",
+    #     [
+    #         Cmd(
+    #             "sudo make uninstall && nautilus -q || true",
+    #             f"{DRIVER_PATH}/nautilus-copy-path",
+    #         ),
+    #     ],
+    # )
 
     section("Finished. Please reopen the terminal.")
 
