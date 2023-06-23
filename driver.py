@@ -267,7 +267,7 @@ def install():
         "nautilus",
         [
             Cmd("git clone https://github.com/chr314/nautilus-copy-path.git"),
-            Cmd("make install && nautilus -q", "./nautilus-copy-path"),
+            Cmd("sudo make install && nautilus -q", "./nautilus-copy-path"),
         ],
     )
 
@@ -363,7 +363,7 @@ def clean():
     section(
         "nautilus",
         [
-            Cmd("make uninstall && nautilus -q", "./nautilus-copy-path"),
+            Cmd("sudo make uninstall && nautilus -q", "./nautilus-copy-path"),
         ],
     )
 
