@@ -41,5 +41,8 @@ sudo apt install curl && curl -L https://raw.githubusercontent.com/aben20807/dot
 ### GNOME Shell extensions
 
 + Open Extension Manager and search following extensions in the Browse tab
-+ [cpufreq](https://extensions.gnome.org/extension/1082/cpufreq/)
-+ [Net Speed](https://extensions.gnome.org/extension/4478/net-speed/)
+  + [cpufreq](https://extensions.gnome.org/extension/1082/cpufreq/)
+  + [Net Speed](https://extensions.gnome.org/extension/4478/net-speed/)
+  + [Freon](https://extensions.gnome.org/extension/841/freon/)
+  + [Coverflow Alt-Tab](https://extensions.gnome.org/extension/97/coverflow-alt-tab/)
+  + [OpenWeather](https://extensions.gnome.org/extension/750/openweather/)
