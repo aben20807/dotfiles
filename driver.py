@@ -135,6 +135,7 @@ def install():
         "fcitx-chewing",
         "xutils-dev",
         "gpg",
+        "most",
     ]
     section(
         "apt packages",
@@ -216,6 +217,9 @@ def install():
     )
 
     section("gdb", [Cmd("wget -P ~ https://git.io/.gdbinit")])
+    section(
+        "most pager for man page", [Cmd("cp /usr/share/doc/most/lesskeys.rc ~/.mostrc")]
+    )
 
     # https://github.com/aben20807/blog-post-issues/issues/26
     section(
@@ -288,13 +292,24 @@ def install():
         ],
     )
 
-    section("vscode", [
-        Cmd("wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg"),
-        Cmd("sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg"),
-        Cmd("""sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'"""),
-        Cmd("rm -f packages.microsoft.gpg"),
-        Cmd("sudo apt-get install -y apt-transport-https && sudo apt-get update && sudo apt-get install -y code"),
-    ])
+    section(
+        "vscode",
+        [
+            Cmd(
+                "wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg"
+            ),
+            Cmd(
+                "sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg"
+            ),
+            Cmd(
+                """sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'"""
+            ),
+            Cmd("rm -f packages.microsoft.gpg"),
+            Cmd(
+                "sudo apt-get install -y apt-transport-https && sudo apt-get update && sudo apt-get install -y code"
+            ),
+        ],
+    )
 
     section("Finished. Please reopen the terminal.")
 
@@ -328,6 +343,7 @@ def clean():
         "brave-browser",
         "apt-transport-https",
         "code",
+        "most",
     ]
     section(
         "apt packages",
@@ -372,6 +388,7 @@ def clean():
     )
 
     section("gdb", [Cmd("rm -f ~/.gdbinit")])
+    section("most pager for man page", [Cmd("rm -f ~/.mostrc")])
 
     # https://github.com/aben20807/blog-post-issues/issues/26
     section(
