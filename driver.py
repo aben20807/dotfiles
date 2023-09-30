@@ -208,7 +208,7 @@ def install():
     section(
         "tmux",
         [
-            Cmd("printf '\nexport TERM=xterm\n' >> ~/.bashrc && source ~/.bashrc"),
+            Cmd("printf '\nexport TERM=xterm-256color\n' >> ~/.bashrc && source ~/.bashrc"),
             Cmd(f"ln -s -b {DRIVER_PATH}/dotfiles/.tmux.conf ~/.tmux.conf"),
             Cmd("mkdir ~/.tmux/plugins/ -p"),
             Cmd("git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"),
