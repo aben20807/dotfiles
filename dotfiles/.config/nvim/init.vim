@@ -314,6 +314,13 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
+" --- andymass/vim-matchup ---
+let g:matchup_matchparen_offscreen = {'method': 'popup'}
+augroup matchup_highlight
+    autocmd!
+    autocmd ColorScheme * hi MatchParen cterm=bold ctermbg=black ctermfg=lightgrey guibg=black guifg=lightgrey
+augroup END
+
 " =============================================================================
 " # Color
 " =============================================================================
