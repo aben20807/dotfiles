@@ -15,10 +15,6 @@ set noshowmode
 set hidden
 set nowrap
 set nojoinspaces
-let g:sneak#s_next = 1
-set printfont=:h10
-set printencoding=utf-8
-set printoptions=paper:letter
 " Always draw sign column. Prevent buffer moving when adding/deleting sign.
 set signcolumn=yes
 
@@ -149,19 +145,27 @@ call plug#begin()
 " Theme
 Plug 'chriskempson/base16-vim'
 
-" VIM enhancements
-Plug 'ciaranm/securemodelines'
+""""""""""""""""""""
+" VIM enhancements "
+""""""""""""""""""""
 Plug 'editorconfig/editorconfig-vim'
+" motion by s with ; and ,
 Plug 'justinmk/vim-sneak'
+let g:sneak#s_next = 1
 Plug 'Yggdroot/indentLine'
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'aben20807/vim-commenter'
 Plug 'aben20807/vim-runner'
+" automatically adjusts 'shiftwidth' and 'expandtab'
 Plug 'tpope/vim-sleuth'
+" file fuzzy finder
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 
-" GUI enhancements
-Plug 'itchyny/vim-gitbranch'
+""""""""""""""""""""
+" GUI enhancements "
+""""""""""""""""""""
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'preservim/tagbar' , {'do': 'ctags -R -h \".h .c .hpp .cpp .java .python .y .l .rs\"'}
@@ -170,12 +174,17 @@ Plug 'preservim/tagbar' , {'do': 'ctags -R -h \".h .c .hpp .cpp .java .python .y
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-" Semantic language support
+"""""""""""""""""""""""""""""
+" Semantic language support "
+"""""""""""""""""""""""""""""
+Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 let g:coc_global_extensions = 
             \ ['coc-clangd', 'coc-pyright', 'coc-rust-analyzer', 'coc-explorer', 'coc-snippets', 'coc-word', 'coc-git']
 
-" Syntactic language support
+""""""""""""""""""""""""""""""
+" Syntactic language support "
+""""""""""""""""""""""""""""""
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
@@ -183,7 +192,8 @@ Plug 'rhysd/vim-clang-format'
 Plug 'godlygeek/tabular'
 
 " Git
-Plug 'aben20807/committia.vim'
+" Plug 'aben20807/committia.vim'
+Plug 'rhysd/committia.vim'
 
 call plug#end()
 " =============================================================================
@@ -201,11 +211,6 @@ let g:runner_cpp_compile_options = "-std=c++17 -Wall -lm -O2 -pipe"
 " other plugin before putting this into your config.
 inoremap <expr> <DOWN> coc#pum#visible() ? coc#pum#next(1) : "<DOWN>"
 inoremap <expr> <UP> coc#pum#visible() ? coc#pum#prev(1) : "<UP>"
-" inoremap <silent><expr> <TAB>
-"             \ pumvisible() ? coc#_select_confirm() :
-"             \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-"             \ <SID>check_back_space() ? "\<TAB>" :
-"             \ coc#refresh()
 inoremap <silent><expr> <TAB>
       \ coc#pum#visible() ? coc#pum#next(1) :
       \ CheckBackspace() ? "\<Tab>" :
@@ -221,9 +226,6 @@ function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-" let g:coc_snippet_next = '<tab>'
-" inoremap <silent><expr> <CR> pumvisible() ? coc#_select_confirm() : "\<c-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -244,26 +246,15 @@ function! s:update_git_status()
 endfunction
 let g:airline_section_b = "%{get(g:,'coc_git_status','')}"
 autocmd User CocGitStatusChange call s:update_git_status()
+" coc-clangd
+nmap <silent> [c :call CocAction('diagnosticNext')<cr>
+nmap <silent> ]c :call CocAction('diagnosticPrevious')<cr>
 
-" <leader>s for Rg search
 " from http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
-if executable('ag')
-    set grepprg=ag\ --nogroup
-endif
-let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 nnoremap <leader>p :<C-u>Files<CR>
 let g:fzf_layout = { 'down': '~20%' }
-" The Silver Searcher (ag)
-"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
-"   :Ag! - Start fzf in fullscreen and display the preview window above
-command! -bang -nargs=* Ag
-            \ call fzf#vim#ag(<q-args>,
-            \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-            \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-            \                 <bang>0)
 
 " --- majutsushi/tagbar ---
-let g:tagbar_map_nexttag = "<C-o>"
 nnoremap <C-t> :TagbarToggle<CR>
 if Is_WSL()
     let g:tagbar_ctags_bin = '/usr/bin/ctags'
@@ -286,7 +277,8 @@ let g:indentLine_char = '┊'
 let g:indentLine_bufNameExclude = ['_.*', 'NERD_tree.*', '__Tag_List__']
 let g:indentLine_fileTypeExclude = ['help', 'text']
 nnoremap <F3> :IndentLinesToggle<CR>
-
+" 
+" --- aben20807/vim-commenter ---
 let g:commenter_n_key = "<C-j>"
 let g:commenter_i_key = "<C-j>"
 let g:commenter_v_key = "<C-j>"
@@ -314,13 +306,6 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
-" --- andymass/vim-matchup ---
-let g:matchup_matchparen_offscreen = {'method': 'popup'}
-augroup matchup_highlight
-    autocmd!
-    autocmd ColorScheme * hi MatchParen cterm=bold ctermbg=black ctermfg=lightgrey guibg=black guifg=lightgrey
-augroup END
-
 " =============================================================================
 " # Color
 " =============================================================================
@@ -337,10 +322,10 @@ let g:python3_host_prog = expand("~/.pyenv/versions/neovim3/bin/python")
 " # Key
 " =============================================================================
 " Jump to start and end of line using the home row keys
-nnoremap H ^
-nnoremap L $l
-vnoremap H ^
-vnoremap L $
+" nnoremap H ^
+" nnoremap L $l
+" vnoremap H ^
+" vnoremap L $
 
 " move screen
 " Ref: https://stackoverflow.com/questions/3458689/how-to-move-screen-without-moving-cursor-in-vim
@@ -356,14 +341,14 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 
 " move more steps
-nnoremap <M-h> 5h
-nnoremap <M-j> 5j
-nnoremap <M-k> 5k
-nnoremap <M-l> 5l
-vnoremap <M-h> 5h
-vnoremap <M-j> 5j
-vnoremap <M-k> 5k
-vnoremap <M-l> 5l
+" nnoremap <M-h> 5h
+" nnoremap <M-j> 5j
+" nnoremap <M-k> 5k
+" nnoremap <M-l> 5l
+" vnoremap <M-h> 5h
+" vnoremap <M-j> 5j
+" vnoremap <M-k> 5k
+" vnoremap <M-l> 5l
 
 " indent
 nmap < <<
