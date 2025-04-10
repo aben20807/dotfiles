@@ -8,6 +8,8 @@ $ printf '\nexport TERM=xterm' >> ~/.bashrc
 $ # reopen terminal
 ```
 
++ `.tmux.conf`: [aben20807/dotfiles/linux/.tmux.conf](https://github.com/aben20807/dotfiles/blob/master/linux/.tmux.conf)
+
 ## My prefix key
 
 + PREFIX = `Ctrl-q`
