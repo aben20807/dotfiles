@@ -1,13 +1,19 @@
-# VIM (Neovim)
+# Neovim
+
++ ref: [To Lua or Not to Lua](https://aben20807.github.io/posts/20231103-to-lua-or-not-to-lua/)
 
 ## Install
 
++ use [bob](https://github.com/MordechaiHadad/bob)
+
 ```bash
-$ sudo add-apt-repository -y ppa:neovim-ppa/stable
-$ sudo apt install -y neovim
+$ cargo install bob-nvim
+$ bob install 0.11.0
+$ bob ls
+$ bob use 0.11.0
 ```
 
-## Setup for virtual environment
+## Setup for virtual environment (legacy)
 
 ```bash
 $ mkdir ~/.config/nvim -p
