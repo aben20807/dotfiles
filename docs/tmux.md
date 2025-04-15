@@ -1,5 +1,7 @@
 # TMUX
 
++ ref: [Tmux](https://aben20807.github.io/posts/20190814-tmux/)
+
 ## Install
 
 ```bash
