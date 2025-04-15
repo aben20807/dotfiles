@@ -18,6 +18,7 @@ jobs:
           filters: |
             docs:
               - 'docs/**'
+              - 'mkdocs.yml'
 
   deploy:
     needs: changes
@@ -34,12 +35,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
       - uses: actions/cache@v4
         with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: .cache 
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            mkdocs-material-
-      - run: pip install mkdocs-material 
+            ${{ runner.os }}-pip-
+      - run: pip install -r requirements.txt && pip list
       - run: mkdocs gh-deploy --force
