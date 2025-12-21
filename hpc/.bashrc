@@ -19,8 +19,21 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+parse_git_branch() {
+    branch=$(git branch --show-current 2>/dev/null)
+    if [ -n "$branch" ]; then
+        echo "($branch)"
+    fi
+}
+
+parse_venv() {
+    if [ -n "$VIRTUAL_ENV" ]; then
+        echo "[`basename \"$VIRTUAL_ENV\"`] "
+    fi  
+}
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
+    PS1='\[\033[01;35m\]$(parse_venv)\[\033[00m\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\] \[\033[01;33m\]$(parse_git_branch)\[\033[00m\]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\W\$ '
 fi

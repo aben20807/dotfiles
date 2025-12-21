@@ -11,3 +11,6 @@
     --pretty=format:'%Cred%h% Cgreen%ad%Creset - %s %C(bold blue)[%an]%Creset%C(yellow)%d%Creset' --abbrev-commit --
     st-u = ls-files . --exclude-standard --others
     st-i = ls-files . --ignored --exclude-standard --others
+
+[core]
+    editor = /usr/bin/vim
