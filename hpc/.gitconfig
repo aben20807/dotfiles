@@ -1,0 +1,13 @@
+[alias] 
+    aa = add --all
+    st = status
+    cmt = commit
+    co = checkout
+    unstage = reset --
+    uncommit = reset --soft HEAD^
+    graph = log --pretty=oneline --decorate --graph
+    lg = log --color --graph --all \
+    --date=format:'%Y-%m-%d' \
+    --pretty=format:'%Cred%h% Cgreen%ad%Creset - %s %C(bold blue)[%an]%Creset%C(yellow)%d%Creset' --abbrev-commit --
+    st-u = ls-files . --exclude-standard --others
+    st-i = ls-files . --ignored --exclude-standard --others

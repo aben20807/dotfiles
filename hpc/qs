@@ -1,0 +1,95 @@
+#!/usr/bin/env python3                                                                                                                                                                                                                       
+import subprocess
+from collections import defaultdict
+
+GPU_PER_NODE = 8 
+CELL_W = 6  # 每個 GPU 欄位寬度
+
+def cmd(c):
+    return subprocess.check_output(c, shell=True, text=True)
+
+# --------------------------------------------------
+# 1. 收集節點清單
+# --------------------------------------------------
+nodes = []
+node_state = {}
+node_load  = {}
+
+out = cmd("sinfo --exact -O 'NodeAddr:20,StateComplete,CPUsLoad'")
+for line in out.splitlines()[1:]:
+    node, state, load = line.split()
+    nodes.append(node)
+    node_state[node] = state.lower()
+    node_load[node] = load
+
+# --------------------------------------------------
+# 2. 收集 job 資訊
+# --------------------------------------------------
+jobs_by_node = defaultdict(list)
+
+out = cmd("squeue -o '%.6i %.10T %.20R %.10b'").splitlines()[1:]
+for line in out:
+    jobid, state, node, tres = line.split()
+    if not node or node == "(null)":
+        continue
+    if not tres.startswith("gres/gpu:"):
+        continue
+    gpu = int(tres.split(":")[1])
+    jobs_by_node[node].append((int(jobid), gpu))
+
+# --------------------------------------------------
+# 3. 表頭
+# --------------------------------------------------
+header = " " * 12
+for i in range(GPU_PER_NODE):
+    header += "|" + " "*(CELL_W//2-2)+f"#{i+1}"+" "*(CELL_W//2-1)
+header += "| State | CPU "
+print(header)
+print("-" * len(header))
+
+# --------------------------------------------------
+# 4. 每個 node
+# --------------------------------------------------
+for node in nodes:
+    jobs = sorted(jobs_by_node[node])
+    used = sum(g for _, g in jobs)
+
+    line = f"{node:<12}|"
+    gpu_used = 0                                                                                                                                                                                                                             
+
+    for idx, (job, g) in enumerate(jobs):
+        span = g * CELL_W
+        label = f"<{job:-^{span-3}}>"
+        line += label
+        gpu_used += g
+        remain = GPU_PER_NODE - gpu_used
+        if remain > 0:
+            line += "|"
+
+    # 補齊剩餘 GPU 空間
+    remain = GPU_PER_NODE - gpu_used
+    if remain > 0:
+        line += " " * (remain * CELL_W - 1)
+
+    state = node_state[node]
+    line += f"|{state[:6]:>6}"
+
+    cpu = f"{float(node_load[node]):5.2f}"
+    line += f" |{cpu:>5}"
+    print(line)
+
+# --------------------------------------------------
+# 5. Load Average（login node）
+# --------------------------------------------------
+la = cmd("uptime").split("load average:")[-1].strip()
+print(f"\nLoad Average: {la}")
+
+# --------------------------------------------------
+# 6. Top CPU users（login node）
+# --------------------------------------------------
+print()
+for line in cmd("ps -eo pcpu,user --sort=-pcpu | head -n 3").splitlines()[1:]:
+    cpu, user = line.split()
+    print(f"{cpu:>5}  {user}")
+
+print("\nI'm Watching You! (O_O;)")
