@@ -79,3 +79,35 @@ ibp220s0 100.126.6.93/16
 
 ==== IB full-mesh check completed ====
 ```
+
+```bash
+$ ssh cnode3-011
+$ ibdev2netdev
+
+mlx5_0 port 1 ==> ibp24s0 (Up)
+mlx5_1 port 1 ==> enp41s0f0np0 (Down)
+mlx5_10 port 1 ==> ibp220s0 (Up)
+mlx5_2 port 1 ==> enp41s0f1np1 (Down)
+mlx5_3 port 1 ==> ibp64s0 (Up)
+mlx5_4 port 1 ==> ibp79s0 (Up)
+mlx5_5 port 1 ==> ibp94s0 (Up)
+mlx5_6 port 1 ==> ibp154s0 (Up)
+mlx5_7 port 1 ==> enp170s0np0 (Up)
+mlx5_8 port 1 ==> ibp192s0 (Up)
+mlx5_9 port 1 ==> ibp206s0 (Up)
+```
+
++ high-performance
+```
+export NCCL_SOCKET_IFNAME=enp170s0np0
+export UCX_NET_DEVICES=ibp24s0:1,ibp64s0:1,ibp79s0:1,ibp94s0:1,ibp154s0:1,ibp192s0:1,ibp206s0:1,ibp220s0:1
+export NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_8,mlx5_9,mlx5_10
+```
+
++ diagnosis
+```
+export NCCL_DEBUG=INFO
+export NCCL_SOCKET_IFNAME=enp170s0np0
+export UCX_NET_DEVICES=ibp24s0:1
+export NCCL_IB_HCA=mlx5_0
+```

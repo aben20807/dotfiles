@@ -55,6 +55,7 @@ set incsearch
 set ignorecase
 set smartcase
 set gdefault
+set hlsearch
 
 " --- tab ---
 set tabstop=4

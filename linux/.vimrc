@@ -97,6 +97,7 @@ set incsearch
 set ignorecase
 set smartcase
 set gdefault
+set hlsearch
 
 " let italic enable
 " Ref: https://askubuntu.com/a/514524
