@@ -16,6 +16,8 @@ let g:commenter_n_key = "<C-j>"
 let g:commenter_i_key = "<C-j>"
 let g:commenter_v_key = "<C-j>"
 
+call plug#end()
+
 " =============================================================================
 " # Color
 " =============================================================================
@@ -183,4 +185,5 @@ vnoremap <silent> <expr> p <SID>Repl()
 " show line numbers, use <F2> to switch
 nnoremap <F2> :set norelativenumber!<CR>:set nonumber!<CR>
 :set number
+
 :set relativenumber
