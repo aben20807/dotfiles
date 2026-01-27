@@ -100,7 +100,7 @@ alias tksall="tmux kill-server"
 alias sinfa="sinfo -a"
 alias seqa='squeue -a --format "%.18i %.9P %.34j %.8u %.2t %.10M %.6D %R"'
 alias scons="scontrol show"
-alias seqd="echo -n '在線人數:  ';w | grep aben | wc -l;echo '----squeue----';squeue -o '%.6i %.40j %.5y %.3t %.12M %.20R %.10b %.40Z';echo '----sinfo----';sinfo --exact -O 'PARTITION:13,Available:8,Nodes:6,NodeAddr:20,StateComplete,Gres
+alias seqd="echo -n '在線人數:  ';w | grep aben | wc -l;echo '----squeue----';squeue -o '%.6i %.40j %.5y %.3t %.12M %.20R %.10b %.40Z';echo '----sinfo----';sinfo --exact -O 'PARTITION:13,Available:8,Nodes:6,NodeAddr:20,StateComplete,GresUsed:12,CPUsState,CPUsLoad'"
 
 # Nsys
 alias nsysp="nsys profile --stats=true --output=$(now)"
